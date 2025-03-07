@@ -1,0 +1,72 @@
+package organization;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.edge.EdgeDriver;
+
+import POM_Repo.CreateProdPage;
+import POM_Repo.DeletePrd;
+import POM_Repo.HomePage;
+import POM_Repo.LoginPageEx;
+import POM_Repo.ProdLookUpImg;
+import generic_Utility.Excel_Utility;
+import generic_Utility.File_Utility;
+import generic_Utility.Java_Utility;
+import generic_Utility.WebDriver_Utility;
+
+public class CreateAndDeleteProduct {
+
+	public static void main(String[] args) throws Throwable {
+
+		File_Utility flib = new File_Utility();
+		Java_Utility jlib = new Java_Utility();
+		Excel_Utility elib = new Excel_Utility();
+		WebDriver_Utility wlib = new WebDriver_Utility();
+
+		String browsername = flib.getCommondata("browsername");
+		flib.getCommondata("url");
+		flib.getCommondata("un");
+		flib.getCommondata("pw");
+		WebDriver drv;
+		if (browsername.equalsIgnoreCase("chrome")) {
+			drv = new ChromeDriver();
+
+		} else if (browsername.equalsIgnoreCase("edge")) {
+			drv = new EdgeDriver();
+
+		} else {
+			drv = new ChromeDriver();
+
+		}
+		wlib.maximizeWindow(drv);
+		wlib.loadTheElements(drv);
+		drv.get(flib.getCommondata("url"));
+
+		LoginPageEx login = new LoginPageEx(drv);
+		login.loginToApp(flib.getCommondata("un"), flib.getCommondata("pw"));
+
+		HomePage hm = new HomePage(drv);
+		hm.clickPrdLink();
+
+		ProdLookUpImg prdImg = new ProdLookUpImg(drv);
+		prdImg.prdLookUpImg();
+		int ranNum = jlib.getRandomValue();
+		CreateProdPage prdpage = new CreateProdPage(drv);
+		String prodname = elib.getStringData("Sheet4", 0, 0) + ranNum;
+		prdpage.enterPrdName(prodname);
+		prdpage.clickSaveButton();
+
+		hm.clickPrdLink();
+
+		DeletePrd delete = new DeletePrd(drv);
+		delete.selectPrdCheckBox(drv, prodname);
+
+		delete.clickOnDeleteButton();
+		wlib.alertAccept(drv);
+
+		delete.ValidatePrdName(drv, prodname);
+		Thread.sleep(1000);
+
+		hm.logOut();
+	}
+}
