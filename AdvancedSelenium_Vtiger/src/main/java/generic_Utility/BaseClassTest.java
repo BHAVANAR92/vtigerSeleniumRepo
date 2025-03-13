@@ -2,6 +2,7 @@ package generic_Utility;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.annotations.AfterClass;
@@ -44,7 +45,12 @@ public class BaseClassTest {
 		//String BROWSER = System.getProperty("browsername");
         
         if (BROWSER.equalsIgnoreCase("chrome")) {
-			drv = new ChromeDriver();
+        	ChromeOptions options = new ChromeOptions();
+        	options.addArguments("--window-size=1920,1080");
+        	// Comment out headless mode for debugging
+        	// options.addArguments("--headless"); 
+        	drv = new ChromeDriver(options);
+			//drv = new ChromeDriver();
 		} else if (BROWSER.equalsIgnoreCase("edge")) {
 			drv = new EdgeDriver();
 		} else if (BROWSER.equalsIgnoreCase("firefox")) {
