@@ -9,6 +9,8 @@ import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class WebDriver_Utility {
 	
@@ -25,11 +27,16 @@ public class WebDriver_Utility {
 	
 	public void windowSwitching(WebDriver driver,String partialTitle)
 	{
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+		wait.until(ExpectedConditions.numberOfWindowsToBe(2));
+		
 		Set<String> allWins = driver.getWindowHandles();// win1,win2
 		Iterator<String> it = allWins.iterator();
 
+		
 		while (it.hasNext()) {
 			String win = it.next();
+			
 			driver.switchTo().window(win);
 			String title = driver.getTitle();
 			if (title.contains(partialTitle)) {
